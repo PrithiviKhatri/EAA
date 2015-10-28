@@ -34,7 +34,29 @@ public class Application {
 	}
 
 	private static void printMoviesReport() {
-		// TODO Auto-generated method stub
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+
+			List<Movie> movies = em.createQuery("from Movie ", Movie.class).getResultList();
+			for (Movie movie : movies) {
+				System.out.println("Movie name" + movie.getName());
+				System.out.println("artists are:: ");
+				List<Artist> artists = movie.getArtists();
+				for (Artist artist : artists) {
+					System.out.println(artist);
+				}
+			}
+			tx.commit();
+		} catch (Exception ex) {
+			if ((tx != null) && (tx.isActive()))
+				tx.rollback();
+		} finally {
+			if ((em != null) && (em.isOpen()))
+				em.close();
+
+		}
 
 	}
 
@@ -70,14 +92,33 @@ public class Application {
 			categories.add("Comedy");
 			categories.add("romantic");
 
+			movie.setName("pyar ki jeet");
 			movie.setArtists(artists);
 			movie.setCategories(categories);
+
+			Movie movie2 = new Movie();
+			movie2.setName("Kasturi");
+			Artist artist4 = new Artist();
+			artist4.setName("rajesh");
+			artist4.setCharacter("actor");
+			artist4.setRating("4");
+
+			Artist artist5 = new Artist();
+			artist5.setName("karisma");
+			artist5.setCharacter("actress");
+			artist5.setRating("1");
+			List<Artist> artists1 = new ArrayList<Artist>();
+			artists1.add(artist4);
+			artists1.add(artist5);
+
+			movie2.setArtists(artists1);
+
 			// TODO your code
 
 			em.persist(movie);
+			em.persist(movie2);
 
 			tx.commit();
-		} catch (Throwable e) {
 			if ((tx != null) && (tx.isActive()))
 				tx.rollback();
 		} finally {

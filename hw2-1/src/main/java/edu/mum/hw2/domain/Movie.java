@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,7 +17,6 @@ public class Movie {
 	String name;
 	String rating;
 	
-	@Embedded
 	@ElementCollection
 	List<Artist> artists;
 
