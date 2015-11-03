@@ -5,14 +5,23 @@ import java.util.*;
 public class BookService implements IBookService {
 	public List<IBookSupplier> suppliers = new ArrayList<IBookSupplier>();
 
+	
+	public List<IBookSupplier> getSuppliers() {
+		return suppliers;
+	}
+
+	public void setSuppliers(List<IBookSupplier> suppliers) {
+		this.suppliers = suppliers;
+	}
+
 	public BookService() {
-		IBookSupplier amazon = new Amazon();
+	/*	IBookSupplier amazon = new Amazon();
 		IBookSupplier barnesandnoble = new BarnesAndNoble();
 		IBookSupplier ebooks = new EBooks();
 
 		suppliers.add(amazon);
 		suppliers.add(barnesandnoble);
-		suppliers.add(ebooks);
+		suppliers.add(ebooks);*/
 	}
 
 	public void buy(Book book) {
