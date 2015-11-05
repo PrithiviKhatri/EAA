@@ -2,18 +2,13 @@ package cs544.exercise8_1.bank.service;
 
 import java.util.Collection;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
-import org.hibernate.Transaction;
-
-import cs544.exercise8_1.bank.dao.AccountDAOHibernate;
 import cs544.exercise8_1.bank.dao.IAccountDAO;
 import cs544.exercise8_1.bank.domain.Account;
 import cs544.exercise8_1.bank.domain.Customer;
 import cs544.exercise8_1.bank.jms.IJMSSender;
-import cs544.exercise8_1.bank.jms.JMSSender;
 import cs544.exercise8_1.bank.logging.ILogger;
-import cs544.exercise8_1.bank.logging.Logger;
 
 @Transactional
 public class AccountService implements IAccountService {

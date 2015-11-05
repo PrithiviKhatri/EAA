@@ -9,7 +9,7 @@
       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
       http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
-	<bean id="accountservice" class="cs544.exercise8_1.bank.service.AccountService">
+	<bean id="accountService" class="cs544.exercise8_1.bank.service.AccountService">
 		<property name="accountDAO" ref="accountdao"></property>
 		<property name="currencyConverter" ref="currencyconverter"></property>
 		<property name="jmsSender" ref="jmssender"></property>
@@ -60,7 +60,7 @@
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<bean id="transactionManager"
-		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
 </beans>
