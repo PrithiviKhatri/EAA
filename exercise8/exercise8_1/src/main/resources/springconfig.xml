@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="
+      http://www.springframework.org/schema/beans 
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+ 	  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+      http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+	<bean id="accountservice" class="cs544.exercise8_1.bank.service.AccountService">
+		<property name="accountDAO" ref="accountdao"></property>
+		<property name="currencyConverter" ref="currencyconverter"></property>
+		<property name="jmsSender" ref="jmssender"></property>
+		<property name="logger" ref="logger"></property>
+
+	</bean>
+	<bean id="currencyconverter" class="cs544.exercise8_1.bank.service.CurrencyConverter">
+
+	</bean>
+
+	<bean id="logger" class="cs544.exercise8_1.bank.logging.Logger"></bean>
+	<bean id="jmssender" class="cs544.exercise8_1.bank.jms.JMSSender"></bean>
+	<bean id="accountdao" class="cs544.exercise8_1.bank.dao.AccountDAO">
+</bean>
+
+	<!-- <bean id="accountdaohibernate" class="cs544.exercise8_1.bank.dao.AccountDAOHibernate">
+	</bean> -->
+
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/excercise8" />
+		<property name="username" value="root" />
+		<property name="password" value="" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="hibernateProperties" ref="hibernateproperties"></property>
+		<property name="packagesToScan" value="cs544.excercise8_1.bank.domain"></property>
+	</bean>
+
+	<bean id="hibernateproperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="hibernate.hbm2ddl.auto">create</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="connection.pool.size">1</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.current_session_context_class">thread</prop>
+			</props>
+		</property>
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+</beans>
