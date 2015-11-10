@@ -3,7 +3,6 @@ package edu.mum.cs.cs544.examples.service;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,17 +36,18 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customer4 = new Customer("jetho", "jaji", "jetho@hotmai.com", address2);
 		Customer customer5 = new Customer("tom", "carlson", "tom@hotmai.com", address3);
 
+		System.out.println("cusotmerDao is "+customerDAO);
 		customerDAO.save(customer1);
-		customerDAO.save(customer2);
-		customerDAO.save(customer3);
-		customerDAO.save(customer4);
-		customerDAO.save(customer5);
+//		customerDAO.save(customer2);
+//		customerDAO.save(customer3);
+//		customerDAO.save(customer4);
+//		customerDAO.save(customer5);
 
 		System.out.println("end of init method");
 	}
 
-	@Autowired
-	SessionFactory sessionFactory;
+	//@Autowired
+	//SessionFactory sessionFactory;
 
 	@Autowired
 	private CustomerDAO customerDAO;
@@ -56,16 +56,16 @@ public class CustomerServiceImpl implements CustomerService {
 		this.customerDAO = customerDAO;
 	}
 
-	public void setSessionFactory(SessionFactory sessionFactory) {
+	/*public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
-	}
+	}*/
 
 	public List<Customer> getAllCustomers() {
 		/*
 		 * Transaction tx =
 		 * sessionFactory.getCurrentSession().beginTransaction();
 		 */ // Get a list of all customers
-		List<Customer> customers = customerDAO.findAll();
+		List<Customer> customers =(List<Customer>) customerDAO.findAll();
 		// tx.commit();
 
 		return customers;
@@ -76,7 +76,7 @@ public class CustomerServiceImpl implements CustomerService {
 		// sessionFactory.getCurrentSession().beginTransaction();
 		// Get a list of all customers for a particular country
 		System.out.println("country name is " + country.getName());
-		List<Customer> customers = customerDAO.findByAddress_City_Country_name(country.getName());
+		List<Customer> customers = null;//customerDAO.findByAddress_City_Country_name(country.getName());
 		// tx.commit();
 
 		return customers;

@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	 http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+	<context:annotation-config />
 
 
-
-	<bean id="customerService" class="edu.mum.cs.cs544.examples.service.CustomerServiceImpl" init-method="init">
-		<property name="sessionFactory" ref="sessionFactory"></property>
-	</bean>
+	<bean id="customerService" class="edu.mum.cs.cs544.examples.service.CustomerServiceImpl"
+		init-method="init">
+<!-- 		<property name="sessionFactory" ref="sessionFactory"></property>
+ -->	</bean>
 	<!-- <bean id="customerdao" class="edu.mum.cs.cs544.examples.dao."></bean> -->
 
+	<context:component-scan base-package="edu.mum.cs.cs544.examples.dao" />
+	<jpa:repositories base-package="edu.mum.cs.cs544.examples.dao"></jpa:repositories>
 
 
 	<!-- the datasource -->
@@ -21,31 +29,75 @@
 		<property name="password" value="" />
 	</bean>
 
+	<!-- <bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean> -->
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
 	<!-- Hibernate 4 Annotation SessionFactory Bean definition -->
-	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	<!-- <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"> 
+		<property name="dataSource" ref="dataSource" /> <property name="hibernateProperties" 
+		ref="hibernateProperties" /> <property name="annotatedClasses"> <list> <value>edu.mum.cs.cs544.examples.entity.Address</value> 
+		<value>edu.mum.cs.cs544.examples.entity.City</value> <value>edu.mum.cs.cs544.examples.entity.Country</value> 
+		<value>edu.mum.cs.cs544.examples.entity.Customer</value> </list> </property> 
+		</bean> -->
+
+	<!-- Creates the transaction manager bean that integrates the used JPA provider 
+		with the Spring transaction mechanism. -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<!-- Enables annotation-driven transaction management. -->
+	<tx:annotation-driven />
+	<!-- Specifies the default settings that are compatible with Hibernate. -->
+	<bean id="hibernateJpaVendorAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+
+	<!-- Creates the bean that creates the JPA entity manager factory. -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="hibernateProperties" ref="hibernateProperties" />
-		<property name="annotatedClasses">
-			<list>
-				<value>edu.mum.cs.cs544.examples.entity.Address</value>
-				<value>edu.mum.cs.cs544.examples.entity.City</value>
-				<value>edu.mum.cs.cs544.examples.entity.Country</value>
-				<value>edu.mum.cs.cs544.examples.entity.Customer</value>
-			</list>
-		</property>
-	</bean>
-	<bean id="hibernateProperties"
-		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-		<property name="properties">
+		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
+		<property name="jpaProperties">
 			<props>
-				<prop key="hibernate.hbm2ddl.auto">create</prop>
+				<!-- Configures the used database dialect. This allows Hibernate to create 
+					SQL that is optimized for the used database. -->
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
-				<prop key="connection.pool.size">1</prop>
+
+				<!-- Specifies the action that is invoked to the database when the Hibernate 
+					SessionFactory is created or closed. -->
+				<prop key="hibernate.hbm2ddl.auto">create</prop>
+
+				<!-- Configures the naming strategy that is used when Hibernate creates 
+					new database objects and schema elements -->
+<!-- 				<prop key="hibernate.ejb.naming_strategy">${hibernate.ejb.naming_strategy}</prop>
+ -->
+				<!-- If the value of this property is true, Hibernate writes all SQL 
+					statements to the console. -->
 				<prop key="hibernate.show_sql">true</prop>
-				<prop key="hibernate.current_session_context_class">thread</prop>
-			</props>
+
+				<!-- If the value of this property is true, Hibernate will use prettyprint 
+					when it writes SQL to the console. -->
+<!-- 				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+ -->			</props>
 		</property>
+		<property name="packagesToScan" value="edu.mum.cs.cs544.examples.entity" />
 	</bean>
+
+<!-- Specifies the default settings that are compatible with Hibernate. -->
+	<!-- <bean id="hibernateJpaVendorAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+
+ -->
+	<!-- <bean id="hibernateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean"> 
+		<property name="properties"> <props> <prop key="hibernate.hbm2ddl.auto">create</prop> 
+		<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop> 
+		<prop key="connection.pool.size">1</prop> <prop key="hibernate.show_sql">true</prop> 
+		<prop key="hibernate.current_session_context_class">thread</prop> </props> 
+		</property> </bean> -->
+
+
 
 </beans>
