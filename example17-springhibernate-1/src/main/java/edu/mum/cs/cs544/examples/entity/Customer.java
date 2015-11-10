@@ -1,5 +1,6 @@
 package edu.mum.cs.cs544.examples.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,7 +36,7 @@ public class Customer {
 	
 	private String email;
 	
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="address_id")
 	private Address address;
 
